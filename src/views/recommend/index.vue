@@ -1,6 +1,7 @@
 <template>
   <div class="recommend" ref="recommend">
-    <Scroll class="recommend-content" v-bind:data="discList" ref="scroll">222222
+    <Scroll class="recommend-content" :data="discList" ref="scroll">
+      
       <div>
         <div class="slider-wrapper" v-if="recommendList.length">
           <slider>
@@ -32,7 +33,7 @@
       </div>
     </Scroll>
     <router-view></router-view>
-           555555555
+         
           <!-- <loading></loading> -->
   </div>
 </template>
@@ -73,11 +74,9 @@ export default {
       //jsonp
       _getRecommend(){
         getRecommend().then(res=>{
-          console.log(res)
+          
           if(res.code===ERR_OK){
-            console.log(66)
             this.recommendList=res.data.slider
-            console.log(this.recommendList)
           }
         })
       },
@@ -101,7 +100,6 @@ export default {
         path:`/recommend/${item.dissid}`
       })
       this.setDisc(item)
-      console.log(this.$store.state.disc)
     },
     ...mapMutations({
       setDisc:'SET_DISC'

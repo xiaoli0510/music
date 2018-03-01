@@ -3,7 +3,7 @@
            <div class="icon"></div>
            <h1 class="text">Water Music</h1>
            <router-link href="" class="mine" to="/user" tag="div">
-            <Icon type="person" class="icon-mine"></Icon>
+            <i class="icon-mine"></i>
            </router-link>
   </div>
 </template>

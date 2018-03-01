@@ -13,6 +13,24 @@ const UserCenter = resolve => {
   })
 }
 
+const Singer = resolve => {
+  import ('../views/singer').then(module => {
+    resolve(module)
+  })
+}
+
+const Rank = resolve => {
+  import ('../views/rank').then(module => {
+    resolve(module)
+  })
+}
+
+const Search = resolve => {
+  import ('../views/search').then(module => {
+    resolve(module)
+  })
+}
+
 export default new Router({
   routes: [
     {
@@ -29,6 +47,21 @@ export default new Router({
       path: '/user',
       component: UserCenter,
       name:'UserCenter'
+    },
+    {
+      path: '/singer',
+      component: Singer,
+      name:'Singer'
+    },
+    {
+      path: '/rank',
+      component: Rank,
+      name:'Rank'
+    },
+    {
+      path: '/search',
+      component: Search,
+      name:'Search'
     }
   ]
 })

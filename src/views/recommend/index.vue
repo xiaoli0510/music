@@ -31,6 +31,7 @@
         <loading></loading>
       </div>
     </Scroll>
+    <router-view></router-view>
            555555555
           <!-- <loading></loading> -->
   </div>
@@ -57,7 +58,9 @@ export default {
     Scroll
   },
   created(){
-        console.log(handlers);
+    this._getRecommend()
+    this._getDiscList()
+       
      
   },
   methods:{
@@ -70,8 +73,11 @@ export default {
       //jsonp
       _getRecommend(){
         getRecommend().then(res=>{
+          console.log(res)
           if(res.code===ERR_OK){
+            console.log(66)
             this.recommendList=res.data.slider
+            console.log(this.recommendList)
           }
         })
       },

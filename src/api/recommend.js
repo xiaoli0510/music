@@ -9,6 +9,7 @@ export function getRecommend() {
     uin: 0,
     needNewCode: 1
   })
+  console.log(jsonp(url, data, options))
 
   return jsonp(url, data, options)
 }

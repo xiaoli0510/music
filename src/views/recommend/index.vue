@@ -83,8 +83,9 @@ export default {
       _getDiscList(){
         getDiscList().then(res=>{
            if(res.code==ERR_OK){
-              this.discList=res.data.recommendList
-              console.log(this.discList)
+              this.discList=res.data.list
+              console.log(99999999999999)
+              console.log(res.data)
            }
         })
       },

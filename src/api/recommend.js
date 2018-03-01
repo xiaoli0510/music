@@ -9,13 +9,12 @@ export function getRecommend() {
     uin: 0,
     needNewCode: 1
   })
-  console.log(jsonp(url, data, options))
-
+ 
   return jsonp(url, data, options)
 }
 
 export function getDiscList() {
-  const url = '/api/getDiscList'
+  const url = 'http://localhost:8080/api/getDiscList'
 
   const data = Object.assign({}, {
     g_tk: 5381,

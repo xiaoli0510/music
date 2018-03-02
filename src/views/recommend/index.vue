@@ -33,7 +33,7 @@
       </div>
     </Scroll>
 
-         
+          <router-view></router-view>
          
   </div>
 </template>
@@ -73,9 +73,11 @@ export default {
       },  
       //jsonp
       _getRecommend(){
+       
         getRecommend().then(res=>{
           
           if(res.code===ERR_OK){
+           
             this.recommendList=res.data.slider
           }
         })
@@ -83,9 +85,8 @@ export default {
       _getDiscList(){
         getDiscList().then(res=>{
            if(res.code==ERR_OK){
+               console.log(123456)
               this.discList=res.data.list
-              console.log(99999999999999)
-              console.log(res.data)
            }
         })
       },

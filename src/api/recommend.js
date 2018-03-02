@@ -14,7 +14,8 @@ export function getRecommend() {
 }
 
 export function getDiscList() {
-  const url = 'http://localhost:8080/api/getDiscList'
+ 
+  const url = 'http://localhost:8080//api/getDiscList'
 
   const data = Object.assign({}, {
     g_tk: 5381,
@@ -31,9 +32,10 @@ export function getDiscList() {
     rnd: Math.random(),
     format: 'json'
   })
-
+  
   return axios.get(url, {
-    params: data
+    
+    params: data,
   }).then(res => {
     return Promise.resolve(res.data)
   })

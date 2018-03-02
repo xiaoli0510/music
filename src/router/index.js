@@ -44,15 +44,13 @@ export default new Router({
       redirect: '/recommend',
       name:'主页'
     },
-    
     {
       path: '/recommend',
       component: Recommend,
       children:[{
-        path: '/recommend/:id',
+        path: 'recommend/:id',
         component: RecommendDetail,
-      }]
-      
+      }]    
     },
     {
       path: '/user',

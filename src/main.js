@@ -13,8 +13,8 @@ Vue.use(VueLazyLoad,{
   error:'./components/myHeader/logo@2x.png',
   loading:'./components/myHeader/logo@2x.png'
 })
-import VueJsonp from 'vue-jsonp'
-Vue.use(VueJsonp)
+// import VueJsonp from 'vue-jsonp'
+// Vue.use(VueJsonp)
 // import '../src/common/stylus/index.styl'
 Vue.use(iView);
 

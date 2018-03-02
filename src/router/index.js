@@ -31,6 +31,12 @@ const Search = resolve => {
   })
 }
 
+const RecommendDetail = resolve => {
+  import ('../views/recommend/details').then(module => {
+    resolve(module)
+  })
+}
+
 export default new Router({
   routes: [
     {
@@ -38,10 +44,15 @@ export default new Router({
       redirect: '/recommend',
       name:'主页'
     },
+    
     {
       path: '/recommend',
       component: Recommend,
-      name:'Recommend'
+      children:[{
+        path: '/recommend/:id',
+        component: RecommendDetail,
+      }]
+      
     },
     {
       path: '/user',

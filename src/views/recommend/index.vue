@@ -32,9 +32,9 @@
         <loading></loading>
       </div>
     </Scroll>
-    <router-view></router-view>
+
          
-          <!-- <loading></loading> -->
+         
   </div>
 </template>
 <script>

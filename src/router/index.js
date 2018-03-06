@@ -19,8 +19,20 @@ const Singer = resolve => {
   })
 }
 
+const SingerDetails = resolve => {
+  import ('../views/singer/details').then(module => {
+    resolve(module)
+  })
+}
+
 const Rank = resolve => {
   import ('../views/rank').then(module => {
+    resolve(module)
+  })
+}
+
+const RankDetails = resolve => {
+  import ('../views/rank/details').then(module => {
     resolve(module)
   })
 }
@@ -36,6 +48,8 @@ const RecommendDetail = resolve => {
     resolve(module)
   })
 }
+
+
 
 export default new Router({
   routes: [
@@ -60,17 +74,27 @@ export default new Router({
     {
       path: '/singer',
       component: Singer,
-      name:'Singer'
+      name:'Singer',
+      children:[{
+        path:'singer/:id',
+        component:SingerDetails
+      }]
+
     },
     {
       path: '/rank',
       component: Rank,
-      name:'Rank'
+      name:'Rank',
+      children:[{
+        path:'rank/:id',
+        component:RankDetails
+      }]
     },
     {
       path: '/search',
       component: Search,
       name:'Search'
     }
+    
   ]
 })

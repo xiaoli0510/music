@@ -1,7 +1,6 @@
 <template>
   <div class="singer" ref="singer">
     <singer-list v-bind:data="singers" ref="list" @select="selectSinger"></singer-list>
-      singer
       <router-view></router-view>
   </div>
 </template>
@@ -31,7 +30,7 @@ export default {
       handlePlayList(playlist) {
         const bottom = playlist.length > 0 ? '60px' : ''
         this.$refs.singer.style.bottom = bottom
-        // this.$refs.list.refresh()
+        this.$refs.list.refresh()
       },
       ...mapMutations({
         setSinger:'SET_SINGER'
@@ -39,9 +38,9 @@ export default {
       _getSingerList(){
         getSingerList().then(res=>{
           if(res.code===ERR_OK){
-            console.log(res.data.list)
+           
               this.singers=this._normalizeSinger(res.data.list)
-              console.log(this.singers)
+              
           }
         })
       },

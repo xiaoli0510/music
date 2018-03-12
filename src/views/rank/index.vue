@@ -1,6 +1,7 @@
 <template>
   <div class="rank" ref="rank">
-      rank
+   
+       <router-view></router-view>    
       <scroll class="toplist" :data="topList" ref="topList">
         <ul>
           <li class="item" v-for="item in topList" :key="item.key" @click="jump(item)">
@@ -19,7 +20,9 @@
           <loading></loading>
         </div>
       </scroll>
-      <router-view></router-view>
+      
+        
+     
   </div>
 </template>
 <script>
@@ -58,7 +61,8 @@ export default {
       },
      jump(item){
          this.$router.push({
-           path:`rank/${item.id}`
+           path:`rank/${item.id}`,
+          
          })
          this.setTopList(item)
      },

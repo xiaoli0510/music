@@ -50,7 +50,7 @@ export default {
   data(){
     return {
       recommendList:[],
-     discList:[]
+     discList:[],
     }
   },
   components:{
@@ -69,13 +69,13 @@ export default {
         let bottom = playlist.length > 0 ? '60px' : ''  
         this.$refs.recommend.style.bottom = bottom  
 
-        // this.$refs.scroll.refresh()
+        this.$refs.scroll.refresh()
       },  
       //jsonp
       _getRecommend(){
        
         getRecommend().then(res=>{
-          
+         
           if(res.code===ERR_OK){
            
             this.recommendList=res.data.slider
@@ -83,9 +83,10 @@ export default {
         })
       },
       _getDiscList(){
+        console.log(1)
         getDiscList().then(res=>{
+          console.log(123456)
            if(res.code==ERR_OK){
-               console.log(123456)
               this.discList=res.data.list
            }
         })
@@ -105,12 +106,18 @@ export default {
     },
     ...mapMutations({
       setDisc:'SET_DISC'
-    })
+    }),
   }
 }
 </script>
 <style scoped lang="stylus">
   @import "../../common/stylus/variable"
+img 
+    transform: scale(1)
+    transition: all ease 0.2s
+
+img.scale 
+    transform: scale(1.5)
 
   .recommend
     position: fixed

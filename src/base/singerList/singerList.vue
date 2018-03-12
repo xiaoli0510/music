@@ -6,6 +6,7 @@
    v-bind:probeType="probeType"
    @scroll="scroll"
    >
+  
    <ul>
      <li 
     
@@ -73,6 +74,7 @@ export default {
   },
   computed:{
     shortcutList(){
+      console.log(this.data)
       return this.data.map((group)=>{
         return group.title.substr(0,1)
       })

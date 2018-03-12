@@ -76,7 +76,7 @@ export default new Router({
       component: Singer,
       name:'Singer',
       children:[{
-        path:'singer/:id',
+        path:'/singer/:id',
         component:SingerDetails
       }]
 
@@ -86,7 +86,7 @@ export default new Router({
       component: Rank,
       name:'Rank',
       children:[{
-        path:'rank/:id',
+        path:'/rank/:id',
         component:RankDetails
       }]
     },

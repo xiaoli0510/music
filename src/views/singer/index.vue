@@ -1,7 +1,8 @@
 <template>
   <div class="singer" ref="singer">
+     <router-view></router-view>
     <singer-list v-bind:data="singers" ref="list" @select="selectSinger"></singer-list>
-      <router-view></router-view>
+     
   </div>
 </template>
 <script>
@@ -38,8 +39,10 @@ export default {
       _getSingerList(){
         getSingerList().then(res=>{
           if(res.code===ERR_OK){
-           
+            
               this.singers=this._normalizeSinger(res.data.list)
+              console.log(11111)
+              console.log(this.singers)
               
           }
         })
@@ -54,8 +57,7 @@ export default {
           }
           list.forEach((item,index)=>{
              if(index<HOT_SINGER_LEN){
-               console.log(map.hot)
-               console.log(map.hot.items)
+              
                map.hot.items.push(new Singer({
                  id:item.Fsinger_mid,
                  name:item.Fsinger_name

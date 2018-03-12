@@ -15,7 +15,7 @@ export function getRecommend() {
 
 export function getDiscList() {
  
-  const url = 'http://localhost:8080//api/getDiscList'
+  const url = 'http://localhost:8080/api/getDiscList'
 
   const data = Object.assign({}, {
     g_tk: 5381,

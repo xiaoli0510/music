@@ -55,7 +55,7 @@ export default {
          const deltaX = e.touches[0].pageX - this.touch.startX
          const offsetWidth = Math.min(Max(0,this.touch.left+deltaX),this.$refs.progressBar.clientWidth-progressBtnWidth)
          this._offset(offsetWidth)
-         this._triggerPercent()
+        
      },
      _triggerPercent(){
           const barWidth = this.$refs.progressBar.clientWidth-progressBtnWidth
@@ -65,6 +65,7 @@ export default {
      },
      progressTouchEnd(){
         this.touch.initiated=false
+         this._triggerPercent()
         // 计算百分比 
      },
      _offset(offsetWidth){

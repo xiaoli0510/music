@@ -5,6 +5,8 @@
      <keep-alive>
          <router-view></router-view>
      </keep-alive>
+     <!-- b播放器全局组件 -->
+     <player></player>
   </div>
 </template>
 

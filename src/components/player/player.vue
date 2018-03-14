@@ -1,5 +1,5 @@
 <template>
-  <div class="player">
+  <div class="player" v-show="playList.length>0">
       <transition name="normal"
          @enter="enter"
          @after-enter="afterEnter"
@@ -57,7 +57,7 @@
           <div class="bottom">
               <div class="dot-wrapper">
                   <span class="dot" :class="{'active':currentShow==='cd'}"></span>
-                  <span class="dot" :class="{'active':currentShor==='lyric'}"></span>
+                  <span class="dot" :class="{'active':currentShow==='lyric'}"></span>
               </div>
               <div class="progress-wrapper">
                   <span class="time time-l">
@@ -78,16 +78,13 @@
                   <div class="icon i-left" :class="disableCls">
                       <i class="icon-prev" @click="prev"></i>
                   </div>
-                   <div class="icon i-center" :class="disableCls">
-                      <i class="playIcon" @click="prev"></i>
+                   <div class="icon i-center">
+                      <i :class="playIcon" @click="togglePlaying"></i>
                   </div>
-                   <div class="icon i-left" :class="disableCls">
-                      <i class="icon-prev" @click="togglePlaying"></i>
-                  </div>
-                    <div class="icon i-right" :class="disableCls">
+                  <div class="icon i-right" :class="disableCls">
                       <i class="icon-next" @click="next"></i>
                   </div>
-                    <div class="icon i-right" :class="disableCls">
+                  <div class="icon i-right">
                       <i
                         @click="toggleFavorite(currentSong)"
                         class="icon"
@@ -144,11 +141,11 @@ import Lyric from 'lyric-parser'
 const transform = prefixStyle('transform')
 const transitionDuration = prefixStyle('transitionDuration')
 
-export default {
+export default {    
     mixins:[playerMixin],
   data() {
     return {
-     soneReady:false,
+     songReady:false,
      currentTime:0,
       currentLyric: null,
       currentLineNum:0,
@@ -208,7 +205,7 @@ export default {
       if (this.currentLyric) {
         this.currentLyric.stop();
       }
-      clearTimer(this.timer);
+      clearTimeout(this.timer);
       this.timer = setTimeout(() => {
         this.$refs.audio.play();
         this.getLyric();
@@ -239,9 +236,39 @@ export default {
       },
     //   解析歌词 使用lyric-parser库
     getLyric(){
+        console.log("success1")
          this.currentSong.getLyric().then(lyric=>{
-             
+             alert(1)
+             console.log("success")
+              this.currentLyric = new Lyric(lyric,this.handleLyric)
+              if(this.playing){
+                   this.currentLyric.play()
+              }
+         }).catch(()=>{
+             this.currentLyric=null
+             this.currentLineNum=0
+             this.playingLyric=''
          })
+    },
+    handleLyric({lineNum,txt}){
+        this.currentLineNum=lineNum
+        // 当行数大于5的时候 滚动 以此让歌词显示在屏幕中
+        if(lineNum>5){
+            let lineE1 = this.$refs.lyricLine[lineNum-5]
+            this.$refs.lyriclist.scrollToElement(lineE1,1000)
+        }else {
+            this.$refs.lyriclist.scrollTo(0,0,1000)
+        }
+        this.playingLyric=txt
+
+    },
+    // 防止快速点击 产生错误
+    ready(){
+        this.songReady=true
+        this.savePlayHistory(this.currentSong)
+    },
+    error(){
+      this.songReady=true
     },
     //   监听progressBar派发的事件
       onProgressBarChange(percent){
@@ -259,7 +286,7 @@ export default {
         this.currentTime = e.target.currentTime
       },
     enter(el, done) {
-      const { x, y, scale } = this._getPosAndScale();
+      const { x, y, scale } = this._getPosAndScale()
       let animation = {
         0: {
           transform: `translate3d(${x}px,${y}px,0) scale(${scale})`
@@ -270,7 +297,7 @@ export default {
         100: {
           transform: `translate3d(0,0,0) scale(1)`
         }
-      };
+      }
 
       animations.registerAnimation({
         name: "move",
@@ -279,12 +306,25 @@ export default {
           duration: 400,
           easing: "linear"
         }
-      });
-      animations.runAnimation(this.$refs.cdWrapper, "move", done);
+      })
+      animations.runAnimation(this.$refs.cdWrapper, "move", done)
     },
-    afterEnter() {},
-    leave() {},
-    afterLeave() {},
+    afterEnter() {
+        animations.unregisterAnimation('move')
+        this.$refs.cdWrapper.style.animation=''
+    },
+    leave(el,done) {
+        this.$refs.cdWrapper.style.transiton='all 0.4s'
+        const {x,y,scale}=this._getPosAndScale()
+        this.$refs.cdWrapper.style[transform]=`translate3d(${x}px,${y}px,0 scale(${scale})`
+        this.$refs.cdWrapper.addEventListener('transitionend',done)
+    },
+    afterLeave() {
+        this.$refs.cdWrapper.style.transiton=''
+        this.$refs.cdWrapper.style[transform]=''
+        
+    },
+    // vue动画钩子结束
     // 获取动画起始位置
     _getPosAndScale() {
       // 左下角小图片初始位置
@@ -305,30 +345,169 @@ export default {
         scale
       };
     },
+    // 歌曲列表
+    showPlayList(){
+       this.$refs.playList.show()
+    },
     changeMode(){
 
     },
+    // 歌曲前进后退
     prev(){
-
+        if(!this.songReady){
+           return 
+        }
+        if(this.playList.length===1){
+           this.loop()
+        }else {
+            let index = this.currentIndex-1
+            if(index===-1){
+              index = this.playList.length-1
+            }
+            this.setCurrentIndex(index)
+            if(!this.playing){
+               this.togglePlaying()
+            }
+        }
+        this.songReady=false
     },
     next(){
-
+         if(!this.songReady){
+            return
+         }
+         //列表只有一首歌曲则是单曲循环的
+         if(this.playList.length===1){
+           this.loop()
+         }else {
+             let index = this.currentIndex +1
+             if(index ===this.playList.length){
+                index = 0
+             }
+             this.setCurrentIndex(index)
+             if(!this.playing){
+               this.togglePlaying()
+             }
+         }
+         this.songReady=false
+    },
+    ended(){
+       if(this.mode===playMode.loop){
+         this.loop()
+       }else {
+           this.next()
+       }
+    },
+    loop(){
+       this.$refs.audio.currentTime=0
+       this.$refs.audio.play()
+    //    循环播放 歌词回到开始的时候
+       if(this.currentLyric){
+            this.currentLyric.seek(0)
+       }
     },
     back() {
-      this.setFullScreen(false);
+      this.setFullScreen(false)
     },
+    open(){
+       this.setFullScreen(true)
+    },
+    // 设置playiing状态 watch playing 的变化 实现播放暂停
+    togglePlaying(){
+       if(!this.songReady){
+         return 
+       }
+       this.setPlayingState(!this.playing)
+    //    歌词随着歌曲播放暂停而滚动或者暂停滚动
+       if(this.currentLyric){
+            this.currentLyric.togglePlay()
+       }
+    },
+    middleTouchStart(e){
+       this.touch.initiated=true
+    //    用来判断是否是一次移动
+       this.touch.moved=false
+       const touch = e.touches[0]
+       this.touch.startX=touch.pageX
+       this.touch.startY=touch.pageY
+    },
+    middleTouchMove(e){
+            // 没有touchstart返回
+            if(!this.touch.initiated){
+                    return
+            }
+            const touch = e.touches[0]
+            const deltaX = touch.pageX-this.touch.startX
+            const deltatY = touch.pageY-this.touch.startY
+            // y轴距离大于x轴距离 =>纵向滚动=》返回
+            if(Math.abs(deltaY)>Math.abs(deltaX)){
+                 return
+            }
+           if(!this.touch.moved){
+              this.touch.moved=true
+           }
+           const left = this.currentShow==='cd'?0:-window.innerWidth
+        //    滚动的距离最大是0
+           const offsetWidth = Math.min(0,Math.max(-window.innerWidth,left+deltaX))
+           this.touch.percent=Math.abs(offsetWidth/window.innerWidth)
+            this.$refs.lyriclist.$el.style[transform] = `translate3d(${offsetWidth}px,0,0)`
+            this.$refs.lyriclist.$el.style[transitionDuration] = 0
+            this.$refs.middleL.style.opacity = 1 - this.touch.percent
+            this.$refs.middleL.style[transitionDuration] = 0
+        },
+        middleTouchEnd(){
+           if(!this.touch.moved){
+              return
+           }
+           let offsetWidth
+           let opacity
+           if(this.currentShow==='cd'){
+            if(this.touch.percent>0.1){
+               offsetWidth = -window.innerWidth
+               opacity = 0
+               this.currentShow='lyric'
+            }else {
+                offsetWidth=0
+                opacity=1
+            }
+           }else{
+               if(this.touch.percent<0.9){
+                   offsetWidth=0
+                   this.currentShow='cd'
+                   opacity=1
+               }else{
+                   offsetWidth=-window.innerWidth
+                   opacity=0
+               }
+           }
+        //    动画缓冲时间
+          const time = 300
+          this.$refs.lyriclist.$el.style[transform]=`translate3d(${offsetWidth}px,0,0)`
+          this.$refs.lyriclist.$el.style[transitionDuration]=`${time}ms`
+          this.$refs.middleL.style.opacity=opacity
+          this.$refs.middleL.style[transitionDuration]=`${time}ms`
+          this.touch.initiated=false
+        },
     ...mapMutations({
       setFullScreen: "SET_FULL_SCREEN"
-    })
+    }),
+    ...mapActions([
+        'savePlayHistory'
+    ])
   }
 };
 </script>
 <style scoped lang="stylus" rel="stylesheet/stylus">
 @import '../../common/stylus/variable';
 @import '../../common/stylus/mixin';
-
+.subTitle {
+    text-align:center;
+}
+.text {
+    margin-left:30px;
+}
 .player {
     .normal-player {
+       
         position: fixed;
         left: 0;
         right: 0;
@@ -377,11 +556,12 @@ export default {
                 color: $color-text;
             }
 
-            .subtitle {
+            .subtTitle {
                 line-height: 20px;
                 text-align: center;
                 font-size: $font-size-medium;
                 color: $color-text;
+              
             }
         }
 
@@ -466,6 +646,7 @@ export default {
                         line-height: 32px;
                         color: $color-text-l;
                         font-size: $font-size-medium;
+                            margin-left: 30px;
 
                         &.current {
                             color: $color-text;
@@ -571,7 +752,7 @@ export default {
 
         &.normal-enter-active, &.normal-leave-active {
             transition: all 0.4s;
-
+           
             .top, .bottom {
                 transition: all 0.4s cubic-bezier(0.86, 0.18, 0.82, 1.32);
             }
@@ -653,7 +834,7 @@ export default {
             flex: 0 0 30px;
             width: 30px;
             padding: 0 10px;
-
+            box-sizing: content-box;
             .icon-play-mini, .icon-pause-mini, .icon-playlist {
                 font-size: 30px;
                 color: $color-theme-d;

@@ -68,7 +68,7 @@ export default {
   props: {
     bgImage: {
       type: String,
-      default: []
+      default: ''
     },
     title: {
       type: String,
@@ -103,7 +103,7 @@ export default {
     back() {
       this.$router.back();
     },
-    selectItem() {
+    selectItem(item,index) {
       this.selectPlay({
         list: this.songs,
         index

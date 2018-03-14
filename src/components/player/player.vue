@@ -7,7 +7,7 @@
          @after-leave="afterLeave"
       >
       <!-- 播放页面全屏 -->
-      <div class="normal-player" v-show="fullScreen">
+      <div class="normal-player" v-if="fullScreen">
           <!-- 背景 模糊 -->
           <div class="background">
               <img :src="currentSong.image" alt="" width="100%" height="100%">
@@ -141,6 +141,7 @@ import Lyric from 'lyric-parser'
 const transform = prefixStyle('transform')
 const transitionDuration = prefixStyle('transitionDuration')
 
+
 export default {    
     mixins:[playerMixin],
   data() {
@@ -151,7 +152,8 @@ export default {
       currentLineNum:0,
       playingLyric:'',
       radius:32,
-      currentShow:'cd'
+      currentShow:'cd',
+      mode:0
     };
   },
   components: {
@@ -350,7 +352,10 @@ export default {
        this.$refs.playList.show()
     },
     changeMode(){
-
+         this.mode++;
+         if(this.mode==3){
+           this.mode=0
+         }
     },
     // 歌曲前进后退
     prev(){
@@ -407,9 +412,11 @@ export default {
     },
     back() {
       this.setFullScreen(false)
+      console.log(this.fullScreen)
     },
     open(){
        this.setFullScreen(true)
+       console.log(this.fullScreen)
     },
     // 设置playiing状态 watch playing 的变化 实现播放暂停
     togglePlaying(){
@@ -849,7 +856,9 @@ export default {
         }
     }
 }
-
+.player .normal-leave-active {
+    z-index:-1;
+}
 @keyframes rotate {
     0% {
         transform: rotate(0);

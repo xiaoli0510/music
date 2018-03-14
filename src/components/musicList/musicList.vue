@@ -86,6 +86,7 @@ export default {
   created() {
     this.probeType = 3;
     this.listenScroll = true;
+    console.log(this.songs)
   },
   // 计算获取背景图片高度 设置scroll的偏移值
   mounted() {

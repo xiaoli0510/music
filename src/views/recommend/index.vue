@@ -1,5 +1,7 @@
 <template>
   <div class="recommend" ref="recommend">
+       <router-view></router-view>    
+    
     <Scroll class="recommend-content" :data="discList" ref="scroll">
       
       <div>
@@ -33,8 +35,7 @@
       </div>
     </Scroll>
 
-          <router-view></router-view>
-         
+        
   </div>
 </template>
 <script>
@@ -88,6 +89,7 @@ export default {
           console.log(123456)
            if(res.code==ERR_OK){
               this.discList=res.data.list
+              console.log(this.discList)
            }
         })
       },
@@ -99,6 +101,8 @@ export default {
      
     },
     selectItem(item){
+      console.log(item)
+      console.log('click')
       this.$router.push({
         path:`/recommend/${item.dissid}`
       })

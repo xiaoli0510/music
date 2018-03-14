@@ -43,7 +43,7 @@ const Search = resolve => {
   })
 }
 
-const RecommendDetail = resolve => {
+const RecommendDetails = resolve => {
   import ('../views/recommend/details').then(module => {
     resolve(module)
   })
@@ -61,9 +61,10 @@ export default new Router({
     {
       path: '/recommend',
       component: Recommend,
+      name:'Recommend',
       children:[{
-        path: 'recommend/:id',
-        component: RecommendDetail,
+        path: '/recommend/:id',
+        component: RecommendDetails,
       }]    
     },
     {

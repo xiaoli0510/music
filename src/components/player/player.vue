@@ -152,8 +152,8 @@ export default {
       currentLineNum:0,
       playingLyric:'',
       radius:32,
-      currentShow:'cd',
-      mode:0
+      currentShow:'cd'
+     
     };
   },
   components: {
@@ -186,12 +186,14 @@ export default {
       iconMode(){
           return this.mode===playMode.sequence ? 'icon-sequence' : this.mode === playMode.loop ? 'icon-loop' : 'icon-random'
       },
+    
       
     ...mapGetters([
         "fullScreen", 
         "playing", 
         "currentIndex"
         ])
+      
   },
   watch: {
     currentSong(newSong, oldSong) {
@@ -352,10 +354,7 @@ export default {
        this.$refs.playList.show()
     },
     changeMode(){
-         this.mode++;
-         if(this.mode==3){
-           this.mode=0
-         }
+        
     },
     // 歌曲前进后退
     prev(){
@@ -412,11 +411,9 @@ export default {
     },
     back() {
       this.setFullScreen(false)
-      console.log(this.fullScreen)
     },
     open(){
        this.setFullScreen(true)
-       console.log(this.fullScreen)
     },
     // 设置playiing状态 watch playing 的变化 实现播放暂停
     togglePlaying(){

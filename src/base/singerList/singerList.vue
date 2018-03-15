@@ -57,7 +57,6 @@ export default {
     this.listenScroll=true
     this.listHeight=[]
     this.probeType=3
-    console.log(this.data)
   },
   data(){
     return {
@@ -74,7 +73,6 @@ export default {
   },
   computed:{
     shortcutList(){
-      console.log(this.data)
       return this.data.map((group)=>{
         return group.title.substr(0,1)
       })

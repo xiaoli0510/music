@@ -2,7 +2,7 @@ import axios from 'axios'
 import { commonParams } from './config'
 
 export function getLyric(mid) {
-  const url = '/api/lyric'
+  const url = 'http://localhost:8080/api/lyric'
 
   const data = Object.assign({}, commonParams, {
     g_tk: 5381,

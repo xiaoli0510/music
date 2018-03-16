@@ -72,8 +72,8 @@
                   </span>
               </div>
               <div class="operators">
-                  <div class="icon i-left" @click="changeMode">
-                      <i :class="iconMode"></i>
+                  <div class="icon i-left" >
+                      <i :class="iconMode" @click="changeMode"></i>
                   </div>
                   <div class="icon i-left" :class="disableCls">
                       <i class="icon-prev" @click="prev"></i>
@@ -128,6 +128,7 @@
   </div>
 </template>
 <script>
+import getLyric from '../../api/lyric'
 import { mapGetters, mapMutations, mapActions } from "vuex";
 import { prefixStyle } from "../../common/js/dom";
 import ProgressBar from "../../base/progressBar/progressBar";
@@ -165,6 +166,7 @@ export default {
 //   滑动touch
   created(){
     this.touch={}
+    console.log(this.mode)
   },
 // 填充歌曲信息 控制歌曲播放
   computed: {
@@ -238,34 +240,31 @@ export default {
            }
            return num
       },
-    //   解析歌词 使用lyric-parser库
-    getLyric(){
-        console.log("success1")
-         this.currentSong.getLyric().then(lyric=>{
-             alert(1)
-             console.log("success")
-              this.currentLyric = new Lyric(lyric,this.handleLyric)
-              if(this.playing){
-                   this.currentLyric.play()
-              }
-         }).catch(()=>{
-             this.currentLyric=null
-             this.currentLineNum=0
-             this.playingLyric=''
-         })
-    },
-    handleLyric({lineNum,txt}){
-        this.currentLineNum=lineNum
-        // 当行数大于5的时候 滚动 以此让歌词显示在屏幕中
-        if(lineNum>5){
-            let lineE1 = this.$refs.lyricLine[lineNum-5]
-            this.$refs.lyriclist.scrollToElement(lineE1,1000)
-        }else {
-            this.$refs.lyriclist.scrollTo(0,0,1000)
-        }
-        this.playingLyric=txt
+       // 解析歌词 使用lyric-parser库
+      getLyric() {
+        this.currentSong.getLyric().then(lyric => {
+            
+          this.currentLyric = new Lyric(lyric, this.handleLyric)
+          if (this.playing) {
+            this.currentLyric.play()
+          }
+        }).catch(() => {
+          this.currentLyric = null
+          this.currentLineNum = 0
+          this.playingLyric = ''
+        })
+      },
 
-    },
+      handleLyric({lineNum, txt}) {
+        this.currentLineNum = lineNum
+        if (lineNum > 5) {
+          let lineEl = this.$refs.lyricLine[lineNum - 5]
+          this.$refs.lyriclist.scrollToElement(lineEl, 1000)
+        } else {
+          this.$refs.lyriclist.scrollTo(0, 0, 1000)
+        }
+        this.playingLyric = txt
+      },
     // 防止快速点击 产生错误
     ready(){
         this.songReady=true
@@ -353,9 +352,8 @@ export default {
     showPlayList(){
        this.$refs.playList.show()
     },
-    changeMode(){
-        
-    },
+    
+
     // 歌曲前进后退
     prev(){
         if(!this.songReady){

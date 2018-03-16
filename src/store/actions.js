@@ -3,7 +3,7 @@ import { playMode } from '../common/js/config'
 import { shuffle } from '../common/js/util'
 import { saveSearch, deleteSearch, clearSearch, savePlay, saveFavorite, deleteFavorite } from '../common/js/cache'
 
-function findIndex(list, song) {
+export const findIndex=(list, song) =>{
   return list.findIndex((item) => {
     return item.id === song.id
   })
